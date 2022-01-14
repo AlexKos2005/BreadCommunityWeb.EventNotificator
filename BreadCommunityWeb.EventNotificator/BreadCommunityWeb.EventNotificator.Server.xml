@@ -1,0 +1,155 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>BreadCommunityWeb.EventNotificator.Server</name>
+    </assembly>
+    <members>
+        <member name="M:BreadCommunityWeb.EventNotificator.Server.Controllers.ConnectNotificatorServiceController.GetServiceConfig">
+            <summary>
+            Получить текущую конфигурацию сервиса
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:BreadCommunityWeb.EventNotificator.Server.Controllers.ConnectNotificatorServiceController.PutServiceConfig(BreadCommunityWeb.EventNotificator.Application.Dto.RequestDto.ConnectNotificatorServiceConfigRequestDto)">
+            <summary>
+            Сохранить или обновить текущую конфигурацию сервиса
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:BreadCommunityWeb.EventNotificator.Server.Controllers.ConnectNotificatorServiceController.StartService">
+            <summary>
+            Запустить сервис
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:BreadCommunityWeb.EventNotificator.Server.Controllers.ConnectNotificatorServiceController.StopService">
+            <summary>
+            Остановить сервис
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:BreadCommunityWeb.EventNotificator.Server.Controllers.ConnectNotificatorServiceController.RestartService">
+            <summary>
+            Перезапустить сервис
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:BreadCommunityWeb.EventNotificator.Server.Controllers.FactoryNotificationsController.SaveFactoryInfo(BreadCommunityWeb.EventNotificator.Application.Dto.RequestDto.FactoryNotificationsInfoRequestDto)">
+            <summary>
+            Сохранить предприятие для отправки уведомлений
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:BreadCommunityWeb.EventNotificator.Server.Controllers.FactoryNotificationsController.GetFactoryInfo(System.Int32)">
+            <summary>
+            Получить информацию об уведомлениях предприятия
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:BreadCommunityWeb.EventNotificator.Server.Controllers.FactoryNotificationsController.DeleteFactoryInfo(System.Int32)">
+            <summary>
+            Удалить информацию об уведомлениях предприятия
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:BreadCommunityWeb.EventNotificator.Server.Controllers.FactoryNotificationsController.PostConnectNotificationChatInfo(System.Int32,BreadCommunityWeb.EventNotificator.Application.Dto.RequestDto.ConnectNotificationChatInfoRequestDto)">
+            <summary>
+            Добавить чат для уведомлений при отсутствии связи с предприятием
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:BreadCommunityWeb.EventNotificator.Server.Controllers.FactoryNotificationsController.DeleteConnectNotificationChatInfo(System.Int32)">
+            <summary>
+            Удалить чат для уведомлений при отсутствии связи с предприятием
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:BreadCommunityWeb.EventNotificator.Server.Controllers.FactoryNotificationsController.PostReportNotificationChatInfo(System.Int32,BreadCommunityWeb.EventNotificator.Application.Dto.RequestDto.ReportNotificationChatInfoRequestDto)">
+            <summary>
+            Добавить чат для уведомлений при отсутствии отчета предприятия
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:BreadCommunityWeb.EventNotificator.Server.Controllers.FactoryNotificationsController.DeleteReportNotificationChatInfo(System.Int32)">
+            <summary>
+            Удалить чат для уведомлений при отсутствии отчета предприятия
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:BreadCommunityWeb.EventNotificator.Server.Controllers.FactoryNotificationsController.GetConnectNotificationsValue(System.Int32)">
+            <summary>
+            Получить текущее значение счетчика уведомлений об отсутствии связи с предприятием
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:BreadCommunityWeb.EventNotificator.Server.Controllers.FactoryNotificationsController.PostConnectNotificationsValue(System.Int32,System.Int32)">
+            <summary>
+            Задать значение счетчика уведомлений об отсутствии связи с предприятием
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:BreadCommunityWeb.EventNotificator.Server.Controllers.FactoryNotificationsController.PostReportNotificationsValue(System.Int32,System.Int32)">
+            <summary>
+            Задать значение счетчика уведомлений об отсутствии отчета предприятия
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:BreadCommunityWeb.EventNotificator.Server.Controllers.FactoryNotificationsController.GetReportNotificationsValue(System.Int32)">
+            <summary>
+            Получить текущее значение счетчика уведомлений об отсутствии отчета предприятия
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:BreadCommunityWeb.EventNotificator.Server.Controllers.ReportNotificatorServiceController.GetServiceConfig">
+            <summary>
+            Получить текущую конфигурацию сервиса
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:BreadCommunityWeb.EventNotificator.Server.Controllers.ReportNotificatorServiceController.PutServiceConfig(BreadCommunityWeb.EventNotificator.Application.Dto.RequestDto.ReportNotificatorServiceConfigRequestDto)">
+            <summary>
+            Сохранить или обновить текущую конфигурацию сервиса
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:BreadCommunityWeb.EventNotificator.Server.Controllers.ReportNotificatorServiceController.StartService">
+            <summary>
+            Запустить сервис
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:BreadCommunityWeb.EventNotificator.Server.Controllers.ReportNotificatorServiceController.StopService">
+            <summary>
+            Остановить сервис
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:BreadCommunityWeb.EventNotificator.Server.Controllers.ReportNotificatorServiceController.RestartService">
+            <summary>
+            Перезапустить сервис
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:BreadCommunityWeb.EventNotificator.Server.Controllers.TelegramServiceController.SendMessageToChat(System.String,System.String)">
+            <summary>
+            Отправить сообщение в чат
+            </summary>
+            <param name="message"></param>
+            <param name="chatId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BreadCommunityWeb.EventNotificator.Server.Controllers.TelegramServiceController.SendMessageToSomeChats(System.String,System.Collections.Generic.List{System.String})">
+            <summary>
+            Отправить сообщение в несколько чатов
+            </summary>
+            <param name="message"></param>
+            <param name="chatsId"></param>
+            <returns></returns>
+        </member>
+        <member name="T:BreadCommunityWeb.Blz.Server.Extentions.SwaggerAddEnumDescriptions">
+            <summary>
+            https://stackoverflow.com/questions/36452468/swagger-ui-web-api-documentation-present-enums-as-strings
+            </summary>
+        </member>
+    </members>
+</doc>
