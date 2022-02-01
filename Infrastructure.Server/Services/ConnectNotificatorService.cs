@@ -89,6 +89,7 @@ namespace BreadCommunityWeb.EventNotificator.Infrastructure.Server.Services
                     if(DateTimeOffset.UtcNow.TimeOfDay> _config.StartCheckReportDayTime)
                     {
                         await CheckLastConnectionTimes();
+                        
                     }
                     else
                     {

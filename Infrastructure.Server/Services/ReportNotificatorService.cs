@@ -97,8 +97,6 @@ namespace BreadCommunityWeb.EventNotificator.Infrastructure.Server.Services
                     }
                 }
                 
-
-
                 await Task.Delay(_config.ReportCheckPeriod);
             }
         }
