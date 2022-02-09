@@ -24,6 +24,7 @@ namespace BreadCommunityWeb.EventNotificator.Infrastructure.Server.Services
         private readonly IHttpService _httpService;
         private readonly ILogger _logger;
         private readonly IMessangerService _messengerService;
+        private DateTimeOffset _lastNotifDate;
 
         private readonly IFactoryNotificationsInfoService _factoryNotifService;
         public ServiceState ServiceState { get; set; }
@@ -66,6 +67,7 @@ namespace BreadCommunityWeb.EventNotificator.Infrastructure.Server.Services
                 return;
             }
             _isStarted = true;
+            _lastNotifDate = DateTimeOffset.Now;
             Task.Run(async () =>
             {
                 await RunLongTask(_cts);
@@ -77,26 +79,28 @@ namespace BreadCommunityWeb.EventNotificator.Infrastructure.Server.Services
         {
             while (!cts.IsCancellationRequested)
             {
-                if(_config.StartCheckReportDayTime>DateTime.UtcNow.TimeOfDay)
+                if (_lastNotifDate.Date != DateTimeOffset.UtcNow.Date)
                 {
-                    try
+                    await ResetNotifCountByNewDayStart();
+                    _lastNotifDate = DateTimeOffset.Now;
+                }
+                try
+                {
+                    if (DateTimeOffset.UtcNow.TimeOfDay > _config.StartCheckReportDayTime)
                     {
-                        if (DateTimeOffset.UtcNow.TimeOfDay > _config.StartCheckReportDayTime)
-                        {
-                            await CheckLastReportTimes();
-                        }
-                        else
-                        {
-                            _logger.Trace("Not time of day for reporting");
-                        }
+                        await CheckLastReportTimes();
                     }
-                    catch (Exception e)
+                    else
                     {
-                        _logger.Error(e);
-                        await Task.Delay(5000);
+                        _logger.Trace("Not time of day for reporting");
                     }
                 }
-                
+                catch (Exception e)
+                {
+                    _logger.Error(e);
+                    await Task.Delay(5000);
+                }
+
                 await Task.Delay(_config.ReportCheckPeriod);
             }
         }
@@ -106,7 +110,7 @@ namespace BreadCommunityWeb.EventNotificator.Infrastructure.Server.Services
             var factoryInfos = await _factoryNotifService.GetAll();
             foreach (var factory in factoryInfos)
             {
-                if (factory.ReportNotificationsStatistic.DayNotificationCounter < _config.MaxNotificationsCount)
+                if (factory.ReportNotificationsStatistic.DayNotificationCounter <= _config.MaxNotificationsCount)
                 {
                     try
                     {
@@ -117,12 +121,12 @@ namespace BreadCommunityWeb.EventNotificator.Infrastructure.Server.Services
                             continue;
                         }
 
-                        if (factoryResponse.EnterpriseActionsInfo.LastDateTimeReportSendingOffset.Date < DateTime.UtcNow.Date)
+                        if (factoryResponse.EnterpriseActionsInfo.LastDateTimeReportSendingOffset.LocalDateTime.Date < DateTime.UtcNow.Date)
                         {
                             var message = ReportNotifMessages.BuildReportOutMessage(
                                factoryResponse.Description,
                                factoryResponse.ExternalId.ToString(),
-                               factoryResponse.EnterpriseActionsInfo.LastDateTimeConnectionOffset.UtcDateTime);
+                               factoryResponse.EnterpriseActionsInfo.LastDateTimeConnectionOffset.LocalDateTime);
                             var chatsId = factory.ConnectNotificationChats.Select(c => c.ChatId).ToList();
                             await _messengerService.SendMessage(chatsId, message);
 
@@ -146,6 +150,23 @@ namespace BreadCommunityWeb.EventNotificator.Infrastructure.Server.Services
                     }
                 }
 
+            }
+        }
+
+        protected async Task ResetNotifCountByNewDayStart()
+        {
+            var factoryInfos = await _factoryNotifService.GetAll();
+            foreach (var factory in factoryInfos)
+            {
+                try
+                {
+                    await _factoryNotifService.ResetConnectNotificationsStatistic(factory.FactoryExternalId);
+                }
+                catch (Exception e)
+                {
+                    _logger.Error($"Can't reset ReportNotifStat for factory external id : {factory.FactoryExternalId}");
+                    _logger.Error(e);
+                }
             }
         }
 

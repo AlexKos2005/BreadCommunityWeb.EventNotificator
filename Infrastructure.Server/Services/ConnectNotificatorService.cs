@@ -25,6 +25,7 @@ namespace BreadCommunityWeb.EventNotificator.Infrastructure.Server.Services
         private readonly IHttpService _httpService;
         private readonly ILogger _logger;
         private readonly IMessangerService _messengerService;
+        private DateTimeOffset _lastNotifDate;
 
         private readonly IFactoryNotificationsInfoService _factoryNotifService;
         public ServiceState ServiceState { get; set; }
@@ -73,6 +74,7 @@ namespace BreadCommunityWeb.EventNotificator.Infrastructure.Server.Services
                 return;
             }
             _isStarted = true;
+            _lastNotifDate = DateTimeOffset.Now;
             Task.Run(async() =>
             {
                 await RunLongTask(_cts);
@@ -84,12 +86,17 @@ namespace BreadCommunityWeb.EventNotificator.Infrastructure.Server.Services
         {
             while(!cts.IsCancellationRequested)
             {
+                if (_lastNotifDate.Date != DateTimeOffset.UtcNow.Date)
+                {
+                    await ResetNotifCountByNewDayStart();
+                    _lastNotifDate = DateTimeOffset.Now;
+                }
+                
                 try
                 {
-                    if(DateTimeOffset.UtcNow.TimeOfDay> _config.StartCheckReportDayTime)
+                    if(DateTimeOffset.UtcNow.TimeOfDay > _config.StartCheckReportDayTime)
                     {
-                        await CheckLastConnectionTimes();
-                        
+                        await CheckLastConnectionTimes(); 
                     }
                     else
                     {
@@ -113,7 +120,7 @@ namespace BreadCommunityWeb.EventNotificator.Infrastructure.Server.Services
             var factoryInfos = await _factoryNotifService.GetAll();
             foreach(var factory in factoryInfos)
             {
-                if(factory.ConnectNotificationsStatistic.NotificationCounter < _config.MaxNotificationsCount)
+                if(factory.ConnectNotificationsStatistic.NotificationCounter <= _config.MaxNotificationsCount)
                 {
                     try
                     {
@@ -124,13 +131,13 @@ namespace BreadCommunityWeb.EventNotificator.Infrastructure.Server.Services
                             continue;
                         }
 
-                        var isConnectTimeOut = factoryResponse.EnterpriseActionsInfo.LastDateTimeConnectionOffset.DateTime.CheckTimeOut(_config.MaxLackConnectionTime.Ticks);
+                        var isConnectTimeOut = factoryResponse.EnterpriseActionsInfo.LastDateTimeConnectionOffset.LocalDateTime.CheckTimeOut(_config.MaxLackConnectionTime.Ticks);
                         if (isConnectTimeOut)
                         {
                             var message = ConnectNotifMessages.BuildConnectTimeOutMessage(
                                 factoryResponse.Description,
                                 factoryResponse.ExternalId.ToString(),
-                                factoryResponse.EnterpriseActionsInfo.LastDateTimeConnectionOffset.UtcDateTime);
+                                factoryResponse.EnterpriseActionsInfo.LastDateTimeConnectionOffset.LocalDateTime);
                             var chatsId = factory.ConnectNotificationChats.Select(c => c.ChatId).ToList();
 
                             await SendMessage(chatsId, message);
@@ -172,6 +179,23 @@ namespace BreadCommunityWeb.EventNotificator.Infrastructure.Server.Services
 
             }
             
+        }
+
+        protected async Task ResetNotifCountByNewDayStart()
+        {
+            var factoryInfos = await _factoryNotifService.GetAll();
+            foreach (var factory in factoryInfos)
+            {
+                try
+                {
+                    await _factoryNotifService.ResetConnectNotificationsStatistic(factory.FactoryExternalId);
+                }
+                catch(Exception e)
+                {
+                    _logger.Error($"Can't reset ConnectNotifStat for factory external id : {factory.FactoryExternalId}");
+                    _logger.Error(e);
+                }
+            }
         }
 
      

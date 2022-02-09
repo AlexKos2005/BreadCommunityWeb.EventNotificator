@@ -14,7 +14,7 @@ namespace BreadCommunityWeb.EventNotificator.Application.Messages
             string strResult = $"Отсутствие отчета\n " +
                  $"Код предприятия: {factoryExternalId}\n " +
                  $"Наименование предприятия: {factoryName}\n " +
-                 $"Дата последней отправки отчета: {lastDateTimeReporting.AddHours(3).ToString()} (МСК)";
+                 $"Дата последней отправки отчета: {lastDateTimeReporting.ToString()} (МСК)";
             return strResult;
         }
     }

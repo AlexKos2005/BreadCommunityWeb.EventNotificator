@@ -78,6 +78,10 @@ namespace BreadCommunityWeb.EventNotificator
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "BreadCommunityWeb.EventNotificator v1"));
             }
+            else
+            {
+                app.UseExceptionHandler("/Error");
+            }
 
             connectNotificatorService.Start(new CancellationTokenSource());
             reportNotificatorService.Start(new CancellationTokenSource());
@@ -85,11 +89,25 @@ namespace BreadCommunityWeb.EventNotificator
             app.UseRouting();
 
             //app.UseAuthorization();
+            app.UseSwagger()
+              .UseSwaggerUI(c =>
+              {
+                  c.SwaggerEndpoint("/swagger/v1/swagger.json",
+                      $"{Assembly.GetExecutingAssembly().GetName().Name}");
+              })
+              .UseStaticFiles()
+              .UseRouting()
+              .UseAuthentication()
+              .UseAuthorization()
+               .UseEndpoints(endpoints =>
+               {
+                   endpoints.MapDefaultControllerRoute();
+               }).UseProblemDetails();
 
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllers();
-            });
+            //app.UseEndpoints(endpoints =>
+            //{
+            //    endpoints.MapControllers();
+            //});
         }
 
         private void ConfigureProblemDetails(ProblemDetailsOptions options)

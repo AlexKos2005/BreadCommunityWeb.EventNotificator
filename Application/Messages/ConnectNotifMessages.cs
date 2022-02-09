@@ -14,7 +14,7 @@ namespace BreadCommunityWeb.EventNotificator.Application.Messages
             string strResult = $"Отсутствие связи\n " +
                 $"Код предприятия: {factoryExternalId}\n " +
                 $"Наименование предприятия: {factoryName}\n " +
-                $"Дата последнего подключения: {lastDateTimeConnection.AddHours(3).ToString()} (МСК)";
+                $"Дата последнего подключения: {lastDateTimeConnection.ToString()} (МСК)";
             return strResult;
         }
     }
