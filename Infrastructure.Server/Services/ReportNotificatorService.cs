@@ -126,10 +126,10 @@ namespace BreadCommunityWeb.EventNotificator.Infrastructure.Server.Services
                             var message = ReportNotifMessages.BuildReportOutMessage(
                                factoryResponse.Description,
                                factoryResponse.ExternalId.ToString(),
-                               factoryResponse.EnterpriseActionsInfo.LastDateTimeConnectionOffset.LocalDateTime);
+                               factoryResponse.EnterpriseActionsInfo.LastDateTimeReportSendingOffset.LocalDateTime);
                             var chatsId = factory.ConnectNotificationChats.Select(c => c.ChatId).ToList();
-                            await _messengerService.SendMessage(chatsId, message);
 
+                            await SendMessage(chatsId, message);
                             _logger.Trace($"Notyfication by lack reporting of factory {factory.FactoryExternalId} is sended");
 
                             var incrementResult = await _factoryNotifService.IncrementReportNotificationsStatistic(factory.FactoryExternalId);
@@ -140,7 +140,7 @@ namespace BreadCommunityWeb.EventNotificator.Infrastructure.Server.Services
                         }
                         else
                         {
-                            await _factoryNotifService.ResetConnectNotificationsStatistic(factory.FactoryExternalId);
+                            await _factoryNotifService.ResetReportNotificationsStatistic(factory.FactoryExternalId);
                         }
                     }
 
@@ -153,6 +153,19 @@ namespace BreadCommunityWeb.EventNotificator.Infrastructure.Server.Services
             }
         }
 
+        protected async Task SendMessage(List<long>? chatsId,string message)
+        {
+            try
+            {
+                await _messengerService.SendMessage(chatsId, message);
+            }
+            catch(Exception e)
+            {
+                _logger.Error(e);
+            }
+            
+        }
+
         protected async Task ResetNotifCountByNewDayStart()
         {
             var factoryInfos = await _factoryNotifService.GetAll();
@@ -160,7 +173,7 @@ namespace BreadCommunityWeb.EventNotificator.Infrastructure.Server.Services
             {
                 try
                 {
-                    await _factoryNotifService.ResetConnectNotificationsStatistic(factory.FactoryExternalId);
+                    await _factoryNotifService.ResetReportNotificationsStatistic(factory.FactoryExternalId);
                 }
                 catch (Exception e)
                 {

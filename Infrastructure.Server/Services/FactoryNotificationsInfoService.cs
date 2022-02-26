@@ -209,7 +209,8 @@ namespace BreadCommunityWeb.EventNotificator.Infrastructure.Server.Services
 
             var currentStat = factoryInfo.ReportNotificationsStatistic;
             factoryInfo.ReportNotificationsStatistic.DayNotificationCounter = currentStat.DayNotificationCounter + 1;
-            var result = await factoryInfoRepository.Update(factoryExternalId, factoryInfo);
+            factoryInfo.ReportNotificationsStatistic.LastNotificationDate = DateTimeOffset.Now;
+            var result = await factoryInfoRepository.Update(factoryInfo.Id, factoryInfo);
 
             if (result == null)
             {
@@ -230,7 +231,7 @@ namespace BreadCommunityWeb.EventNotificator.Infrastructure.Server.Services
             }
 
             factoryInfo.ConnectNotificationsStatistic.NotificationCounter = 0;
-            var result = await factoryInfoRepository.Update(factoryExternalId, factoryInfo);
+            var result = await factoryInfoRepository.Update(factoryInfo.Id, factoryInfo);
 
             if (result == null)
             {
@@ -252,7 +253,7 @@ namespace BreadCommunityWeb.EventNotificator.Infrastructure.Server.Services
 
             var currentStat = factoryInfo.ReportNotificationsStatistic;
             factoryInfo.ReportNotificationsStatistic.DayNotificationCounter = 0;
-            var result = await factoryInfoRepository.Update(factoryExternalId, factoryInfo);
+            var result = await factoryInfoRepository.Update(factoryInfo.Id, factoryInfo);
 
             if (result == null)
             {

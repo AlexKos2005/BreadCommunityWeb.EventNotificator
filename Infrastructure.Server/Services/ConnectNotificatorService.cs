@@ -167,18 +167,17 @@ namespace BreadCommunityWeb.EventNotificator.Infrastructure.Server.Services
             }
         }
 
-        protected async Task SendMessage(List<long> chatsId,string message)
+        protected async Task SendMessage(List<long>? chatsId, string message)
         {
-            //TODO: Разобраться с исключением при отправки сообщений. Исключение вываливается, но сообщения доставляются.
             try
             {
                 await _messengerService.SendMessage(chatsId, message);
             }
-            catch(Exception e)
+            catch (Exception e)
             {
-
+                _logger.Error(e);
             }
-            
+
         }
 
         protected async Task ResetNotifCountByNewDayStart()
